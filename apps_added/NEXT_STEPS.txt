@@ -1,0 +1,9 @@
+
+Django project detected. I added models stubs under apps_added/:
+- profiles_models.py
+- posts_models.py
+
+Next steps (locally):
+1. Move these model contents into actual apps (python manage.py startapp profiles), paste models, add to INSTALLED_APPS.
+2. Run makemigrations and migrate.
+3. Implement serializers and views (DRF recommended) and update URLs.

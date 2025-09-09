@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2 class="mb-4">Create a Post</h2>
+<form method="post" enctype="multipart/form-data" class="mb-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Post</button>
+</form>
+
+<hr>
+
+<h2 class="mb-3">Feed</h2>
+{% for post in posts %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ post.user.username }}</h5>
+        <p class="card-text">{{ post.content }}</p>
+
+        {% if post.image %}
+            <img src="{{ post.image.url }}" class="img-fluid rounded mb-2" alt="Post image">
+        {% endif %}
+
+        <div>
+            {% if post.is_liked %}
+                <a href="{% url 'like_post' post.id %}" class="btn btn-sm btn-danger">
+                    👎 Unlike ({{ post.total_likes }})
+                </a>
+            {% else %}
+                <a href="{% url 'like_post' post.id %}" class="btn btn-sm btn-outline-primary">
+                    👍 Like ({{ post.total_likes }})
+                </a>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <h6>Comments:</h6>
+        {% for comment in post.comments.all %}
+            <p><b>{{ comment.user.username }}:</b> {{ comment.text }}</p>
+        {% empty %}
+            <p>No comments yet.</p>
+        {% endfor %}
+
+        <form method="post" action="{% url 'add_comment' post.id %}">
+            {% csrf_token %}
+            <div class="input-group mt-2">
+                <input type="text" name="text" class="form-control" placeholder="Add a comment...">
+                <button class="btn btn-secondary" type="submit">Comment</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
